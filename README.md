@@ -65,10 +65,54 @@ TCMB XML API
 GET /api/health
 ```
 
+**Response (`200 OK`):**
+
+```text
+OK
+```
+
 ### Today's Currency Rates
 
 ```http
 GET /api/currencies/today
+```
+
+**Response (`200 OK` - `application/json`):**
+
+```json
+{
+  "id": "20260929",
+  "date": "2026-09-29T00:00:00Z",
+  "dayNo": "2026/182",
+  "currencies": [
+    {
+      "code": "USD",
+      "crossOrder": 0,
+      "unit": 1,
+      "currencyNameTr": "ABD DOLARI",
+      "currencyName": "US DOLLAR",
+      "forexBuying": 48.9008,
+      "forexSelling": 48.9889,
+      "banknoteBuying": 48.8665,
+      "banknoteSelling": 49.0623,
+      "crossRateUsd": 0,
+      "crossRateOther": 0
+    },
+    {
+      "code": "EUR",
+      "crossOrder": 9,
+      "unit": 1,
+      "currencyNameTr": "EURO",
+      "currencyName": "EURO",
+      "forexBuying": 55.6307,
+      "forexSelling": 55.731,
+      "banknoteBuying": 55.5918,
+      "banknoteSelling": 55.8146,
+      "crossRateUsd": 0,
+      "crossRateOther": 1.1376
+    }
+  ]
+}
 ```
 
 ## Getting Started
@@ -96,13 +140,14 @@ https://www.tcmb.gov.tr/kurlar/
 ## Project Structure
 
 ```text
-TCBMCurrency/
+tcmb-currency-dashboard/
 ├── internal/
 │   ├── tcmb/       # TCMB data fetching and XML parsing
 │   └── http/       # HTTP handlers and REST API
 │
 ├── frontend/       # React + Vite application
 ├── assets/         # Screenshots and project assets
+├── LICENSE         # MIT License
 └── README.md
 ```
 
@@ -120,3 +165,7 @@ This project was built to practice working with real-world financial data and to
 ## Status
 
 This project is actively open for improvements and experimentation.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

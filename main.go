@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	api "github.com/emreEngineering/TCBMCurrency/internal/http"
+	api "github.com/emrelab/tcmb-currency-dashboard/internal/http"
 )
 
 func withCORS(handler http.Handler) http.Handler {

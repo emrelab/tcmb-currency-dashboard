@@ -1,13 +1,18 @@
 package tcmb
 
 import (
+	"bytes"
 	"encoding/xml"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
+
+// BaseURL is the root endpoint for fetching TCMB currency XML files.
+var BaseURL = "http://www.tcmb.gov.tr/kurlar"
 
 type CurrencyDay struct {
 	ID         string     `json:"id"`
@@ -56,7 +61,7 @@ type xmlMoney struct {
 func GetCurrencyDay(date time.Time) (*CurrencyDay, error) {
 	originalDate := date
 
-	for {
+	for i := 0; i < 30; i++ {
 		currDay, err := fetchCurrencyDay(date, originalDate)
 		if err != nil {
 			return nil, err
@@ -68,10 +73,12 @@ func GetCurrencyDay(date time.Time) (*CurrencyDay, error) {
 
 		date = date.AddDate(0, 0, -1)
 	}
+
+	return nil, fmt.Errorf("no currency data found within 30 days")
 }
 
 func fetchCurrencyDay(date time.Time, originalDate time.Time) (*CurrencyDay, error) {
-	url := "http://www.tcmb.gov.tr/kurlar/" + date.Format("200601") + "/" + date.Format("02012006") + ".xml"
+	url := fmt.Sprintf("%s/%s/%s.xml", BaseURL, date.Format("200601"), date.Format("02012006"))
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -87,16 +94,31 @@ func fetchCurrencyDay(date time.Time, originalDate time.Time) (*CurrencyDay, err
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	var parsed tarihDate
-	decoder := xml.NewDecoder(resp.Body)
-	if err := decoder.Decode(&parsed); err != nil {
+	result, err := ParseXMLReader(resp.Body, originalDate)
+	if err != nil {
 		log.Printf("xml decode error: %v", err)
 		return nil, err
 	}
 
+	return result, nil
+}
+
+// ParseXML parses raw TCMB XML bytes into a CurrencyDay struct.
+func ParseXML(data []byte, date time.Time) (*CurrencyDay, error) {
+	return ParseXMLReader(bytes.NewReader(data), date)
+}
+
+// ParseXMLReader parses TCMB XML from an io.Reader into a CurrencyDay struct.
+func ParseXMLReader(r io.Reader, date time.Time) (*CurrencyDay, error) {
+	var parsed tarihDate
+	decoder := xml.NewDecoder(r)
+	if err := decoder.Decode(&parsed); err != nil {
+		return nil, err
+	}
+
 	result := &CurrencyDay{
-		ID:         originalDate.Format("20060102"),
-		Date:       originalDate,
+		ID:         date.Format("20060102"),
+		Date:       date,
 		DayNo:      parsed.BultenNo,
 		Currencies: make([]Currency, len(parsed.Currency)),
 	}

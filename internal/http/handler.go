@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/emreEngineering/TCBMCurrency/internal/tcmb"
+	"github.com/emrelab/tcmb-currency-dashboard/internal/tcmb"
 )
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
