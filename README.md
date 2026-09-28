@@ -1,90 +1,122 @@
-# TCBM Currency Dashboard
+# TCMB Currency Dashboard
 
-Türkiye Cumhuriyet Merkez Bankası (TCMB) döviz kurlarını anlık olarak
-çeken ve kullanıcı dostu bir arayüzde sunan full-stack web uygulaması.
+A full-stack currency dashboard built with **Go** and **React**, using official exchange-rate data published by the **Central Bank of the Republic of Türkiye (TCMB)**.
 
-## Özellikler
+The application fetches currency data from TCMB's XML endpoint, processes it with a Go backend, and exposes the data through a REST API consumed by a React frontend.
 
--    Güncel döviz kurlarını görüntüleme
--    Arama ve filtreleme
--    USD, EUR, GBP için öne çıkan kartlar
--    Gerçek zamanlı veri (TCMB XML API)
--    REST API + React arayüz
+![TCMB Currency Dashboard](./assets/ui.jpeg)
 
-------------------------------------------------------------------------
-##  Ekran Görüntüsü
+## Features
 
-<img src="./assets/ui.jpeg" alt="Uygulama çıktısı" width="1000">
+* Live TCMB exchange-rate data
+* REST API built with Go
+* XML parsing with Go's `encoding/xml`
+* React + Vite frontend
+* Currency search and filtering
+* USD, EUR and GBP highlighted rates
+* Clean dashboard interface
+* Health-check endpoint
 
-------------------------------------------------------------------------
-
-## ️ Kullanılan Teknolojiler
-
-### Backend (Go)
-
--   Go (Golang)
--   net/http
--   XML parsing (encoding/xml)
-
-### Frontend (React)
-
--   React + Vite
--   Axios
--   CSS (custom styling)
-
-------------------------------------------------------------------------
-
-## Proje Mimarisi
-
-    TCBMCurrency/
-      internal/
-        tcmb/        -> TCMB veri çekme ve parse işlemleri
-        http/        -> API handler'lar
-
-      frontend/
-        React uygulaması
-
-------------------------------------------------------------------------
-
-##  API Endpointleri
-
-### Sağlık kontrolü
-
-GET /api/health
-
-### Güncel döviz kurları
-
-GET /api/currencies/today
-
-------------------------------------------------------------------------
-
-## ️ Kurulum ve Çalıştırma
+## Tech Stack
 
 ### Backend
 
-    go run .
+* Go
+* `net/http`
+* `encoding/xml`
+* REST API
 
 ### Frontend
 
-    cd frontend
-    npm install
-    npm run dev
+* React
+* Vite
+* Axios
+* CSS
 
-------------------------------------------------------------------------
+## Architecture
 
-## Veri Kaynağı
+```text
+TCMB XML API
+     │
+     ▼
+┌─────────────────┐
+│   Go Backend    │
+│                 │
+│ XML Parsing     │
+│ Data Processing │
+│ REST API        │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ React Frontend  │
+│                 │
+│ Dashboard       │
+│ Search          │
+│ Filtering       │
+└─────────────────┘
+```
 
-http://www.tcmb.gov.tr/kurlar/
+## API
 
-------------------------------------------------------------------------
+### Health Check
 
-## Hakkında
+```http
+GET /api/health
+```
 
-Bu proje, Go öğrenme sürecimde geliştirdiğim küçük bir uygulamadır.
+### Today's Currency Rates
 
-Amaçlarım:
-- XML veri çekme ve parse etme
-- String verileri sayısal tiplere dönüştürme
-- Gerçek dünya verisi ile çalışma pratiği kazanmak
+```http
+GET /api/currencies/today
+```
 
-Geliştirme sürecinde, bazı konuları daha hızlı öğrenmek ve farklı yaklaşımları görmek için AI araçlarından destek aldım.
+## Getting Started
+
+### Backend
+
+```bash
+go run .
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Data Source
+
+Currency data is provided by the official **Türkiye Cumhuriyet Merkez Bankası (TCMB)**.
+
+https://www.tcmb.gov.tr/kurlar/
+
+## Project Structure
+
+```text
+TCBMCurrency/
+├── internal/
+│   ├── tcmb/       # TCMB data fetching and XML parsing
+│   └── http/       # HTTP handlers and REST API
+│
+├── frontend/       # React + Vite application
+├── assets/         # Screenshots and project assets
+└── README.md
+```
+
+## Purpose
+
+This project was built to practice working with real-world financial data and to explore:
+
+* Go HTTP servers
+* XML parsing
+* REST API design
+* React frontend development
+* Backend/frontend integration
+* External API consumption
+
+## Status
+
+This project is actively open for improvements and experimentation.
